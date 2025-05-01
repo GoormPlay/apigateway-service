@@ -1,1 +1,30 @@
-spring.application.name=apigateway-service
+spring:
+  main-application-type: reactive
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+server:
+  port: 8080
+
+
+service:
+  jwt:
+    secret-key: "gggggooooooorrrrrrrrmmmmmmmmmmmmm"
+
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://gpadmin:1234@localhost:8761/eureka
+
+security:
+  permit-paths: /auth/signIn,/auth/signUp,/public/**
