@@ -47,6 +47,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     }
 
     private boolean isPermittedPath(String currentPath) {
+        System.out.println(currentPath);
         return permitPaths.stream()
                 .anyMatch(permitPath ->
                         PathPatternParser.defaultInstance.parse(permitPath).matches(PathContainer.parsePath(currentPath))
@@ -64,12 +65,15 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     private boolean validateToken(String token){
         try{
             SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build().parseClaimsJws(token);
+            Jws<Claims> claimsJws = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);//jwt 11에서 12로 버전업 했음
 
 
-            log.info("payload : " + claimsJws.getBody().toString());
+
+
+            log.info("payload : " + claimsJws.getPayload().toString());
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
