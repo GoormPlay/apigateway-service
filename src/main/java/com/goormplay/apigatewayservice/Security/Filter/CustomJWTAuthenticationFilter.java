@@ -69,20 +69,16 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token);//jwt 11에서 12로 버전업 했음
-
-
-
-
-            log.info("payload : " + claimsJws.getPayload().toString());
+            log.info("페이로드 : " + claimsJws.getPayload().toString());
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.info("유효하지 않은 JWT 토큰입니다.", e);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.info("만료된 JWT 토큰입니다.", e);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.info("지원되지 않는 JWT 토큰입니다.", e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.info("JWT 클레임 문자열이 비어 있습니다.", e);
         }
         return false;
     }
