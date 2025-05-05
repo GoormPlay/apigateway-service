@@ -1,6 +1,11 @@
 package com.goormplay.apigatewayservice.Security.Filter;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -62,25 +67,19 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
         return null;
     }
 
-    private boolean validateToken(String token){
-        try{
-            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-            Jws<Claims> claimsJws = Jwts.parser()
-                    .verifyWith(key)
-                    .build()
-                    .parseSignedClaims(token);//jwt 11에서 12로 버전업 했음
-            log.info("페이로드 : " + claimsJws.getPayload().toString());
+    public boolean validateToken(String token) {//사용 라이브러리 변경
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey); // secretKey는 String 또는 byte[]
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            System.out.println("페이로드: " + jwt.getPayload());
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("유효하지 않은 JWT 토큰입니다.", e);
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.", e);
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.", e);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 클레임 문자열이 비어 있습니다.", e);
+        } catch (JWTVerificationException exception) {
+            // 서명 오류, 만료, 클레임 오류 등
+            System.out.println("유효하지 않은 JWT 토큰입니다: " + exception.getMessage());
+            return false;
         }
-        return false;
     }
 
 
