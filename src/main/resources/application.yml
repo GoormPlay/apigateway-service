@@ -36,4 +36,4 @@ eureka:
       defaultZone: http://gpadmin:1234@localhost:8761/eureka
 
 security:
-  permit-paths: /api/auth/signIn,/api/auth/signUp,/api/public/**
+  permit-paths: /api/auth/signin,/api/auth/signup,/api/public/**

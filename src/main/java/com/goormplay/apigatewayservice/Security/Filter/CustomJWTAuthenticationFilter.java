@@ -52,11 +52,17 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     }
 
     private boolean isPermittedPath(String currentPath) {
-        System.out.println(currentPath);
+        log.info("현재 요청 -> " + currentPath);
         return permitPaths.stream()
-                .anyMatch(permitPath ->
+                .filter(permitPath ->
                         PathPatternParser.defaultInstance.parse(permitPath).matches(PathContainer.parsePath(currentPath))
-                );
+                )
+                .findFirst()
+                .map(matchedPath -> {
+                    log.info("매치된 permitPath: " + matchedPath);
+                    return true;
+                })
+                .orElse(false);
     }
 
     private String extractToken(ServerWebExchange exchange) {
@@ -73,11 +79,11 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
             JWTVerifier verifier = JWT.require(algorithm)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
-            System.out.println("페이로드: " + jwt.getPayload());
+            log.info("페이로드: " + jwt.getPayload());
             return true;
         } catch (JWTVerificationException exception) {
             // 서명 오류, 만료, 클레임 오류 등
-            System.out.println("유효하지 않은 JWT 토큰입니다: " + exception.getMessage());
+            log.error("유효하지 않은 JWT 토큰입니다: " + exception.getMessage());
             return false;
         }
     }
