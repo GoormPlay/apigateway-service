@@ -35,6 +35,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("Filter 시작");
         String path = exchange.getRequest().getURI().getPath();
 
         if (isPermittedPath(path)) {
@@ -42,7 +43,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
         }
 
         String token = extractToken(exchange);
-
+        log.info("AccessToken:   "+ token);
         if (token == null || !validateToken(token)) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();

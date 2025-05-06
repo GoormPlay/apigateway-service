@@ -17,6 +17,8 @@ spring:
             - Path=/member/**
           filters:
             - RewritePath=/member/(?<segment>.*), /api/member/$\{segment}
+      default-filters:
+        PreserveHostHeader
 
 server:
   port: 8080
