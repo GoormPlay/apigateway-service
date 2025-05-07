@@ -9,13 +9,24 @@ spring:
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /api/auth/$\{segment}
+        - id: member-service
+          uri: lb://member-service
+          predicates:
+            - Path=/member/**
+          filters:
+            - RewritePath=/member/(?<segment>.*), /api/member/$\{segment}
+      default-filters:
+        PreserveHostHeader
+
 server:
   port: 8080
 
 
 service:
   jwt:
-    secret-key: "gggggooooooorrrrrrrrmmmmmmmmmmmmm"
+    secret-key: "pA1Qb6q8vXqWn4FQ8zQ2h6V7Q6k3y8fB3wZ2s9T1n4m5c6p7v8w9x0y1z2A3B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8"
 
 
 
@@ -27,4 +38,4 @@ eureka:
       defaultZone: http://gpadmin:1234@localhost:8761/eureka
 
 security:
-  permit-paths: /auth/signIn,/auth/signUp,/public/**
+  permit-paths: /api/auth/signin,/api/auth/signup,/api/public/**

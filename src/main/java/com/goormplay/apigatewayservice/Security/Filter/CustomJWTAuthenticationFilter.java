@@ -1,6 +1,11 @@
 package com.goormplay.apigatewayservice.Security.Filter;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,6 +35,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("Filter 시작");
         String path = exchange.getRequest().getURI().getPath();
 
         if (isPermittedPath(path)) {
@@ -37,7 +43,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
         }
 
         String token = extractToken(exchange);
-
+        log.info("AccessToken:   "+ token);
         if (token == null || !validateToken(token)) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
@@ -47,10 +53,17 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     }
 
     private boolean isPermittedPath(String currentPath) {
+        log.info("현재 요청 -> " + currentPath);
         return permitPaths.stream()
-                .anyMatch(permitPath ->
+                .filter(permitPath ->
                         PathPatternParser.defaultInstance.parse(permitPath).matches(PathContainer.parsePath(currentPath))
-                );
+                )
+                .findFirst()
+                .map(matchedPath -> {
+                    log.info("매치된 permitPath: " + matchedPath);
+                    return true;
+                })
+                .orElse(false);
     }
 
     private String extractToken(ServerWebExchange exchange) {
@@ -61,26 +74,19 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
         return null;
     }
 
-    private boolean validateToken(String token){
-        try{
-            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build().parseClaimsJws(token);
-
-
-            log.info("payload : " + claimsJws.getBody().toString());
+    public boolean validateToken(String token) {//사용 라이브러리 변경
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey); // secretKey는 String 또는 byte[]
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            log.info("페이로드: " + jwt.getPayload());
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+        } catch (JWTVerificationException exception) {
+            // 서명 오류, 만료, 클레임 오류 등
+            log.error("유효하지 않은 JWT 토큰입니다: " + exception.getMessage());
+            return false;
         }
-        return false;
     }
 
 
