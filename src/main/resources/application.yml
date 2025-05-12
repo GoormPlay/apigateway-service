@@ -17,6 +17,12 @@ spring:
             - Path=/member/**
           filters:
             - RewritePath=/member/(?<segment>.*), /api/member/$\{segment}
+        - id: ui-service
+          uri: lb://ui-service
+          predicates:
+            - Path=/ui/**
+          filters:
+            - RewritePath=/ui/(?<segment>.*), /api/ui/$\{segment}
       default-filters:
         PreserveHostHeader
 
