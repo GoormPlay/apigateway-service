@@ -5,24 +5,30 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-service
+        - id: auth-service #인증 서비스
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /api/auth/$\{segment}
-        - id: member-service
+        - id: member-service #멤버 서비스
           uri: lb://member-service
           predicates:
             - Path=/member/**
           filters:
             - RewritePath=/member/(?<segment>.*), /api/member/$\{segment}
-        - id: ui-service
+        - id: ui-service # 유저 인터렉션(좋아요) 서비스
           uri: lb://ui-service
           predicates:
             - Path=/ui/**
           filters:
             - RewritePath=/ui/(?<segment>.*), /api/ui/$\{segment}
+        - - id: ad-service # 광고 서비스
+            uri: lb://ad-service
+            predicates:
+              - Path=/ad/**
+            filters:
+              - RewritePath=/ad/(?<segment>.*), /api/ad/$\{segment}
       default-filters:
         PreserveHostHeader
 
