@@ -22,7 +22,8 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
        logger.info("======Pre Filter======");
        logger.info("PreFilter :  URI       -> " + request.getURI());
        logger.info("PreFilter :  Method:   -> " + request.getMethod());
-       logger.info("PreFilter :  Headers:  -> " + request.getHeaders());
+        logger.info("PreFilter :  Headers:  -> " + request.getHeaders());
+        logger.info("PreFilter :  Added X-From-Gateway: true");
 
         ServerHttpRequest modifiedRequest = request.mutate()
                 .header("X-From-Gateway", "true")

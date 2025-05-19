@@ -5,43 +5,79 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-service #인증 서비스
+        - id: auth-service
           uri: lb://auth-service
           predicates:
             - Path=/auth/**
           filters:
-            - RewritePath=/auth/(?<segment>.*), /api/auth/$\{segment}
-        - id: member-service #멤버 서비스
+            - RewritePath=/auth/(?<segment>.*), /api/auth/${segment}
+
+        - id: member-service
           uri: lb://member-service
           predicates:
             - Path=/member/**
           filters:
-            - RewritePath=/member/(?<segment>.*), /api/member/$\{segment}
-        - id: ui-service # 유저 인터렉션(좋아요) 서비스
+            - RewritePath=/member/(?<segment>.*), /api/member/${segment}
+
+        - id: ui-service
           uri: lb://ui-service
           predicates:
             - Path=/ui/**
           filters:
-            - RewritePath=/ui/(?<segment>.*), /api/ui/$\{segment}
-        - id: ad-service # 광고 서비스
+            - RewritePath=/ui/(?<segment>.*), /api/ui/${segment}
+
+        - id: ad-service
           uri: lb://ad-service
           predicates:
-              - Path=/ad/**
+            - Path=/ad/**
           filters:
-              - RewritePath=/ad/(?<segment>.*), /api/ad/$\{segment}
-        - id: content-service # 컨텐츠 서비스
+            - RewritePath=/ad/(?<segment>.*), /api/ad/${segment}
+
+        - id: ad-admin-service
+          uri: lb://ad-admin-service
+          predicates:
+            - Path=/api/ads/**
+          filters:
+            - RewritePath=/api/ads/(?<segment>.*), /api/ads/${segment}
+
+        - id: content-service
           uri: lb://content-service
           predicates:
-            - Path=/content/**
+            - Path=/api/contents/**
           filters:
-            - RewritePath=/content/(?<segment>.*), /api/content/$\{segment}
-        - id: review-service # 리뷰 서비스
+            - RewritePath=/api/contents/(?<segment>.*), /api/contents/${segment}
+
+        - id: content-service-public
+          uri: lb://content-service
+          predicates:
+            - Path=/api/public/contents/**
+        - id: indexing-service
+          uri: lb://indexing-service
+          predicates:
+            - Path=/index/**
+          filters:
+            - RewritePath=/index/(?<segment>.*), /api/index/${segment}
+
+        - id: review-service
           uri: lb://review-service
           predicates:
             - Path=/review/**
           filters:
-            - RewritePath=/review/(?<segment>.*), /api/review/$\{segment}
-              
+            - RewritePath=/review/(?<segment>.*), /api/review/${segment}
+
+        - id: subscribe-service
+          uri: lb://subscribe-service
+          predicates:
+            - Path=/subscribe/**
+          filters:
+            - RewritePath=/subscribe/(?<segment>.*), /api/subscribe/${segment}
+
+        - id: userAction-test-service
+          uri: lb://userAction-test-service
+          predicates:
+            - Path=/events/**
+          filters:
+            - RewritePath=/events/(?<segment>.*), /api/events/${segment}
       default-filters:
         PreserveHostHeader
 
@@ -63,4 +99,9 @@ eureka:
       defaultZone: http://gpadmin:1234@localhost:8761/eureka
 
 security:
-  permit-paths: /api/auth/signin,/api/auth/signup,/api/public/**
+  permit-paths: /api/public/**,/api/auth/**,/static/**
+
+# 정적 리소스 서빙 설정
+  web:
+    resources:
+      static-locations: classpath:/static/  # 리액트 빌드 결과가 들어갈 위치
