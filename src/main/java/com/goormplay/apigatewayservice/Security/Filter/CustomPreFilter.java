@@ -24,9 +24,12 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
        logger.info("PreFilter :  Method:   -> " + request.getMethod());
         logger.info("PreFilter :  Headers:  -> " + request.getHeaders());
         logger.info("PreFilter :  Added X-From-Gateway: true");
+        String originalPath = request.getPath().pathWithinApplication().value();  // 예: /api/public/contents/latest
+        logger.info("Original Path for JWT permit check: " + originalPath);
 
         ServerHttpRequest modifiedRequest = request.mutate()
                 .header("X-From-Gateway", "true")
+                .header("X-Original-Path", originalPath)
                 .build();
         //요청이 gateway를 지났음을 header에 담음
 

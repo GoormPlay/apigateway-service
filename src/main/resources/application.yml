@@ -8,76 +8,72 @@ spring:
         - id: auth-service
           uri: lb://auth-service
           predicates:
-            - Path=/auth/**
+            - Path=/api/auth/**
           filters:
-            - RewritePath=/auth/(?<segment>.*), /api/auth/${segment}
+            - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
 
         - id: member-service
           uri: lb://member-service
           predicates:
-            - Path=/member/**
+            - Path=/api/member/**
           filters:
-            - RewritePath=/member/(?<segment>.*), /api/member/${segment}
+            - RewritePath=/api/member/(?<segment>.*), /member/${segment}
 
         - id: ui-service
           uri: lb://ui-service
           predicates:
-            - Path=/ui/**
+            - Path=/api/public/ui/**, /api/ui/**
           filters:
-            - RewritePath=/ui/(?<segment>.*), /api/ui/${segment}
+            - RewritePath=/api(?:/public)?/ui/(?<segment>.*), /ui/${segment}
 
         - id: ad-service
           uri: lb://ad-service
           predicates:
-            - Path=/ad/**
+            - Path=/api/public/ad/**, /api/ad/**
           filters:
-            - RewritePath=/ad/(?<segment>.*), /api/ad/${segment}
+            - RewritePath=/api(?:/public)?/ad/(?<segment>.*), /ad/${segment}
 
         - id: ad-admin-service
           uri: lb://ad-admin-service
           predicates:
-            - Path=/api/ads/**
+            - Path=/api/public/ads/**, /api/ads/**
           filters:
-            - RewritePath=/api/ads/(?<segment>.*), /api/ads/${segment}
+            - RewritePath=/api(?:/public)?/ads/(?<segment>.*), /ads/${segment}
 
         - id: content-service
           uri: lb://content-service
           predicates:
-            - Path=/api/contents/**
+            - Path=/api/public/contents/**, /api/contents/**
           filters:
-            - RewritePath=/api/contents/(?<segment>.*), /api/contents/${segment}
+            - RewritePath=/api(?:/public)?/contents/(?<segment>.*), /contents/${segment}
 
-        - id: content-service-public
-          uri: lb://content-service
-          predicates:
-            - Path=/api/public/contents/**
         - id: indexing-service
           uri: lb://indexing-service
           predicates:
             - Path=/index/**
           filters:
-            - RewritePath=/index/(?<segment>.*), /api/index/${segment}
+            - RewritePath=/index/(?<segment>.*), /index/${segment}
 
         - id: review-service
           uri: lb://review-service
           predicates:
-            - Path=/review/**
+            - Path=/api/public/review/**, /api/review/**
           filters:
-            - RewritePath=/review/(?<segment>.*), /api/review/${segment}
+            - RewritePath=/api(?:/public)?/review/(?<segment>.*), /review/${segment}
 
         - id: subscribe-service
           uri: lb://subscribe-service
           predicates:
-            - Path=/subscribe/**
+            - Path=/api/public/subscribe/**, /api/subscribe/**
           filters:
-            - RewritePath=/subscribe/(?<segment>.*), /api/subscribe/${segment}
+            - RewritePath=/api(?:/public)?/subscribe/(?<segment>.*), /subscribe/${segment}
 
         - id: userAction-test-service
           uri: lb://userAction-test-service
           predicates:
-            - Path=/events/**
+            - Path=/api/public/events/**, /api/events/**
           filters:
-            - RewritePath=/events/(?<segment>.*), /api/events/${segment}
+            - RewritePath=/api(?:/public)?/events/(?<segment>.*), /events/${segment}
       default-filters:
         PreserveHostHeader
 
@@ -99,7 +95,10 @@ eureka:
       defaultZone: http://gpadmin:1234@localhost:8761/eureka
 
 security:
-  permit-paths: /api/public/**,/api/auth/**,/static/**
+  permit-paths: >
+    /api/public/**,
+    /api/auth/**,
+    /static/**
 
 # 정적 리소스 서빙 설정
   web:

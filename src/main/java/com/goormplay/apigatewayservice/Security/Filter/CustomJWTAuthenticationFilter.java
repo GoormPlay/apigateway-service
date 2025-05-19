@@ -33,8 +33,8 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Filter 시작");
         String path = exchange.getRequest().getURI().getPath();
-
-        if (isPermittedPath(path)) {
+        String originalPath = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
+        if (originalPath != null && isPermittedPath(originalPath)) {
             return chain.filter(exchange);
         }
 
