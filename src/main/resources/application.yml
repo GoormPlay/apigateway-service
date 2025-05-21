@@ -18,7 +18,6 @@ spring:
             - Path=/api/member/**
           filters:
             - RewritePath=/api/member/(?<segment>.*), /member/${segment}
-
         - id: ui-service
           uri: lb://ui-service
           predicates:
@@ -46,6 +45,12 @@ spring:
             - Path=/api/public/contents/**, /api/contents/**
           filters:
             - RewritePath=/api(?:/public)?/contents/(?<segment>.*), /contents/${segment}
+        - id: common
+          uri: lb://common
+          predicates:
+            - Path=/common/logs/**
+          filters:
+            - RewritePath=/common/logs/(?<segment>.*), /common/logs/${segment}
 
         - id: indexing-service
           uri: lb://indexing-service
@@ -95,10 +100,7 @@ eureka:
       defaultZone: http://gpadmin:1234@localhost:8761/eureka
 
 security:
-  permit-paths: >
-    /api/public/**,
-    /api/auth/**,
-    /static/**
+  permit-paths: /api/public/**,/api/auth/**,/static/**
 
 # 정적 리소스 서빙 설정
   web:

@@ -32,6 +32,10 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Filter 시작");
+        // public 요청은 토큰 검증 스킵
+        if ("true".equals(exchange.getRequest().getHeaders().getFirst("X-Public-Request"))) {
+            return chain.filter(exchange);
+        }
         String path = exchange.getRequest().getURI().getPath();
         String originalPath = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
         if (originalPath != null && isPermittedPath(originalPath)) {
@@ -50,7 +54,10 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 
     private boolean isPermittedPath(String currentPath) {
         log.info("현재 요청 -> " + currentPath);
+        log.info("허용된 경로들 -> " + permitPaths); // 실제 로드된 permitPaths 확인
+
         return permitPaths.stream()
+                .peek(permitPath -> log.info("checking path: " + permitPath)) // 각 permitPath 체크 로깅
                 .filter(permitPath ->
                         PathPatternParser.defaultInstance.parse(permitPath).matches(PathContainer.parsePath(currentPath))
                 )

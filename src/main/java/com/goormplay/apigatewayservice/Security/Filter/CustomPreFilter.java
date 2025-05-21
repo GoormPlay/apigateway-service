@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 @Component
@@ -25,10 +26,16 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
         logger.info("PreFilter :  Headers:  -> " + request.getHeaders());
         logger.info("PreFilter :  Added X-From-Gateway: true");
         String originalPath = request.getPath().pathWithinApplication().value();  // 예: /api/public/contents/latest
+        String[] permittedPaths = {"/api/public/", "/api/auth"};
         logger.info("Original Path for JWT permit check: " + originalPath);
+
 
         ServerHttpRequest modifiedRequest = request.mutate()
                 .header("X-From-Gateway", "true")
+                // public 요청 여부를 헤더로 전달
+                .header("X-Public-Request",
+                        Arrays.stream(permittedPaths)
+                                .anyMatch(originalPath::startsWith) ? "true" : "false")
                 .header("X-Original-Path", originalPath)
                 .build();
         //요청이 gateway를 지났음을 header에 담음
