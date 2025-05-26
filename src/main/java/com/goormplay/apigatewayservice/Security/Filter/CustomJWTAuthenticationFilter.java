@@ -32,13 +32,16 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Filter 시작");
-        // public 요청은 토큰 검증 스킵
         if ("true".equals(exchange.getRequest().getHeaders().getFirst("X-Public-Request"))) {
-            return chain.filter(exchange);
-        }
-        String path = exchange.getRequest().getURI().getPath();
-        String originalPath = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
-        if (originalPath != null && isPermittedPath(originalPath)) {
+            String token = extractToken(exchange);
+            // public 요청이지만 토큰이 있는 경우 검증 시도 (실패해도 진행)
+            if (token != null) {
+                try {
+                    validateToken(token);
+                } catch (Exception e) {
+                    log.debug("Token validation failed for public path", e);
+                }
+            }
             return chain.filter(exchange);
         }
 
