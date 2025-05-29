@@ -84,20 +84,16 @@ spring:
 
 server:
   port: 8080
-
-
 service:
   jwt:
     secret-key: "pA1Qb6q8vXqWn4FQ8zQ2h6V7Q6k3y8fB3wZ2s9T1n4m5c6p7v8w9x0y1z2A3B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8"
-
-
 
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://gpadmin:1234@localhost:8761/eureka
+      defaultZone: ${EUREKA_URL:http://gpadmin:1234@localhost:8761/eureka} # Jenkins 환경변수 EUREKA_URL이 있으면 사용, 없으면 localhost
 
 security:
   permit-paths: /api/public/**,/api/auth/**,/static/**
