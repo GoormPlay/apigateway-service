@@ -97,8 +97,3 @@ eureka:
 
 security:
   permit-paths: /api/public/**,/api/auth/**,/static/**
-
-# 정적 리소스 서빙 설정
-  web:
-    resources:
-      static-locations: classpath:/static/  # 리액트 빌드 결과가 들어갈 위치
