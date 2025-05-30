@@ -1,11 +1,13 @@
 spring:
-  main-application-type: reactive
   application:
     name: apigateway-service
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: auth-service
           uri: lb://auth-service

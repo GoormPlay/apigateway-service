@@ -18,8 +18,8 @@ public class CorsGlobalConfiguration {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin(allowedOrigin); // Jenkins 환경변수에서 전달됨
+        config.setAllowCredentials(false); // JWT 인증이면 false (쿠키 인증이면 true)
+        config.addAllowedOrigin(allowedOrigin); // 예: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
@@ -28,18 +28,5 @@ public class CorsGlobalConfiguration {
 
         return new CorsWebFilter(source);
     }
-    @Bean
-    public WebFluxConfigurer corsConfigurer() {
-        return new WebFluxConfigurerComposite() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*") // 필요시 도메인 제한
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
-            }
-        };
-    }
-
 
 }
