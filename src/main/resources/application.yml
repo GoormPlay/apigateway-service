@@ -89,7 +89,8 @@ server:
 service:
   jwt:
     secret-key: "pA1Qb6q8vXqWn4FQ8zQ2h6V7Q6k3y8fB3wZ2s9T1n4m5c6p7v8w9x0y1z2A3B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8"
-
+cors:
+  allowed-origin: ${S3_FRONTEND_ORIGIN:http://localhost:3000}
 eureka:
   client:
     register-with-eureka: true
