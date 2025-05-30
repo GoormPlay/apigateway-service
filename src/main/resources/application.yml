@@ -5,6 +5,19 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   cloud:
     gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "${cors.allowed-origin}"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
       discovery:
         locator:
           enabled: true
