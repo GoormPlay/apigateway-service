@@ -9,11 +9,14 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class CorsGlobalConfig {
+    @Value("${cors.allowed-origin}")
+    private String allowedOrigin;
+
     @Bean
-    public CorsWebFilter corsWebFilter(@Value("${cors.allowed-origin}") String allowedOrigin) {
+    public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
-        config.addAllowedOrigin(allowedOrigin);
+        config.setAllowCredentials(false); // JWT 인증이면 false (쿠키 인증이면 true)
+        config.addAllowedOrigin(allowedOrigin); // 예: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
