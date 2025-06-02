@@ -9,6 +9,9 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
+import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
+
+import java.util.HashMap;
 
 @Configuration
 public class CorsGlobalConfiguration {
@@ -27,6 +30,14 @@ public class CorsGlobalConfiguration {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean
+    public SimpleUrlHandlerMapping simpleUrlHandlerMapping() {
+        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+        mapping.setOrder(Integer.MAX_VALUE);
+        mapping.setUrlMap(new HashMap<>());
+        return mapping;
     }
 
 }
