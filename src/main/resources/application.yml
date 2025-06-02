@@ -17,7 +17,7 @@ spring:
               - DELETE
               - OPTIONS
             allowedHeaders: "*"
-            allowCredentials: true
+            allowCredentials: false
       discovery:
         locator:
           enabled: true
