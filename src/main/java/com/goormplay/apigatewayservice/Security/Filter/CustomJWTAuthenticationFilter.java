@@ -26,7 +26,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     @Value("${service.jwt.secret-key}")
     private String secretKey;
 
-    @Value("#{'${security.permit-paths}'.split(',')}")//yml에 리스트로 만들어봄
+    @Value("#{'${security.permit-paths}'.split('\\s*,\\s*')}")//yml에 리스트로 만들어봄
     private List<String> permitPaths;
 
     @Override
@@ -54,20 +54,23 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     }
 
     private boolean isPermittedPath(String currentPath) {
+//        log.info("현재 요청 -> " + currentPath);
+//        for (String permitPath : permitPaths) {
+//            log.info("비교중 permitPath: " + permitPath);
+//            boolean matched = PathPatternParser.defaultInstance
+//                    .parse(permitPath)
+//                    .matches(PathContainer.parsePath(currentPath));
+//            log.info("매치 결과 -> " + matched);
+//            if (matched) {
+//                log.info("매치된 permitPath: " + permitPath);
+//                return true;
+//            }
+//        }
+//        return false;
         log.info("현재 요청 -> " + currentPath);
-        log.info("허용된 경로들 -> " + permitPaths); // 실제 로드된 permitPaths 확인
-
         return permitPaths.stream()
-                .peek(permitPath -> log.info("checking path: " + permitPath)) // 각 permitPath 체크 로깅
-                .filter(permitPath ->
-                        PathPatternParser.defaultInstance.parse(permitPath).matches(PathContainer.parsePath(currentPath))
-                )
-                .findFirst()
-                .map(matchedPath -> {
-                    log.info("매치된 permitPath: " + matchedPath);
-                    return true;
-                })
-                .orElse(false);
+                .peek(path -> log.info("비교 대상 permitPath: " + path))
+                .anyMatch(currentPath::startsWith);
     }
 
     private String extractToken(ServerWebExchange exchange) {
