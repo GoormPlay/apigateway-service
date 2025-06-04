@@ -65,7 +65,6 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
             }
         }
         return false;
-
     }
 
     private String extractToken(ServerWebExchange exchange) {
