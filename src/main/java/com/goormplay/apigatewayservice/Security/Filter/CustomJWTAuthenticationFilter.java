@@ -31,20 +31,12 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Filter 시작");
-
+        // 모든 요청에 X-From-Gateway 헤더 추가
         exchange = exchange.mutate()
                 .request(builder -> builder.header("X-From-Gateway", "true"))
                 .build();
 
-        // 🔥 Rewrite되기 전 원래 경로 사용
-        String path = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
-        if (path == null) {
-            path = exchange.getRequest().getURI().getPath();
-        }
-
-        log.info("JWT 체크용 원래 요청 경로: " + path);
-
+        String path = exchange.getRequest().getURI().getPath();
         if (isPermittedPath(path)) {
             log.info("퍼밋된 경로 통과: " + path);
             return chain.filter(exchange);
@@ -60,24 +52,20 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     }
 
     private boolean isPermittedPath(String currentPath) {
-//        log.info("현재 요청 -> " + currentPath);
-//        for (String permitPath : permitPaths) {
-//            log.info("비교중 permitPath: " + permitPath);
-//            boolean matched = PathPatternParser.defaultInstance
-//                    .parse(permitPath)
-//                    .matches(PathContainer.parsePath(currentPath));
-//            log.info("매치 결과 -> " + matched);
-//            if (matched) {
-//                log.info("매치된 permitPath: " + permitPath);
-//                return true;
-//            }
-//        }
-//        return false;
         log.info("현재 요청 -> " + currentPath);
-        return permitPaths.stream()
-                .map(path -> path.replace("/**", ""))  // "/api/auth/**" → "/api/auth"
-                .peek(path -> log.info("startsWith 비교 대상 permitPath: " + path))
-                .anyMatch(currentPath::startsWith);
+        for (String permitPath : permitPaths) {
+            log.info("비교중 permitPath: " + permitPath);
+            boolean matched = PathPatternParser.defaultInstance
+                    .parse(permitPath)
+                    .matches(PathContainer.parsePath(currentPath));
+            log.info("매치 결과 -> " + matched);
+            if (matched) {
+                log.info("매치된 permitPath: " + permitPath);
+                return true;
+            }
+        }
+        return false;
+
     }
 
     private String extractToken(ServerWebExchange exchange) {
