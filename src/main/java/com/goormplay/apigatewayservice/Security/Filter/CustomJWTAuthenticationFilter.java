@@ -33,12 +33,18 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Filter 시작");
 
-        // 모든 요청에 X-From-Gateway 헤더 추가
         exchange = exchange.mutate()
                 .request(builder -> builder.header("X-From-Gateway", "true"))
                 .build();
 
-        String path = exchange.getRequest().getURI().getPath();
+        // 🔥 Rewrite되기 전 원래 경로 사용
+        String path = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
+        if (path == null) {
+            path = exchange.getRequest().getURI().getPath();
+        }
+
+        log.info("JWT 체크용 원래 요청 경로: " + path);
+
         if (isPermittedPath(path)) {
             log.info("퍼밋된 경로 통과: " + path);
             return chain.filter(exchange);
