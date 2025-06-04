@@ -37,13 +37,13 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
                 .request(builder -> builder.header("X-From-Gateway", "true"))
                 .build();
 
-        // 🔥 Rewrite되기 전 원래 경로 사용
+        // 🔥 원래 경로 사용
         String path = exchange.getRequest().getHeaders().getFirst("X-Original-Path");
         if (path == null) {
-            path = exchange.getRequest().getURI().getPath();
+            path = exchange.getRequest().getURI().getPath();  // fallback
         }
 
-        log.info("JWT 체크용 원래 요청 경로: " + path);
+        log.info("JWT 체크용 경로 -> " + path);
 
         if (isPermittedPath(path)) {
             log.info("퍼밋된 경로 통과: " + path);
@@ -55,6 +55,7 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
+        log.info("Authorization 헤더: " + exchange.getRequest().getHeaders().getFirst("Authorization"));
 
         return chain.filter(exchange);
     }
