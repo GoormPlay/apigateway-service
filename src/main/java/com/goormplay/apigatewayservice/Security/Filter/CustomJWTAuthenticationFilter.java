@@ -69,7 +69,8 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 //        return false;
         log.info("현재 요청 -> " + currentPath);
         return permitPaths.stream()
-                .peek(path -> log.info("비교 대상 permitPath: " + path))
+                .map(path -> path.replace("/**", ""))  // "/api/auth/**" → "/api/auth"
+                .peek(path -> log.info("startsWith 비교 대상 permitPath: " + path))
                 .anyMatch(currentPath::startsWith);
     }
 
