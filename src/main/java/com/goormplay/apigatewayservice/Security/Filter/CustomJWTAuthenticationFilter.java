@@ -32,6 +32,8 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Filter 시작");
+        String isPublic = exchange.getRequest().getHeaders().getFirst("X-Public-Request");
+        log.info("X-Public-Request: " + isPublic);
         if ("true".equals(exchange.getRequest().getHeaders().getFirst("X-Public-Request"))) {
             String token = extractToken(exchange);
             // public 요청이지만 토큰이 있는 경우 검증 시도 (실패해도 진행)
