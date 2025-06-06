@@ -35,11 +35,9 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
 
         // ✅ 헤더를 .headers() 방식으로 추가
         ServerHttpRequest modifiedRequest = request.mutate()
-                .headers(httpHeaders -> {
-                    httpHeaders.set("X-From-Gateway", "true");
-                    httpHeaders.set("X-Public-Request", isPublic ? "true" : "false");
-                    httpHeaders.set("X-Original-Path", originalPath);
-                })
+                .header("X-From-Gateway", "true")
+                .header("X-Public-Request", isPublic ? "true" : "false")
+                .header("X-Original-Path", originalPath)
                 .build();
         //요청이 gateway를 지났음을 header에 담음
 
