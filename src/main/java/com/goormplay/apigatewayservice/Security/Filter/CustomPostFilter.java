@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 @Component
 public class CustomPostFilter implements GlobalFilter, Ordered {
 
-    private static final Logger logger =Logger.getLogger(CustomPreFilter.class.getName());
+    private static final Logger logger =Logger.getLogger(CustomPostFilter.class.getName());
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
