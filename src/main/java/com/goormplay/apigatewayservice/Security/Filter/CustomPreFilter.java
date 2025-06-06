@@ -19,24 +19,27 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-       ServerHttpRequest request = exchange.getRequest();
-       logger.info("======Pre Filter======");
-       logger.info("PreFilter :  URI       -> " + request.getURI());
-       logger.info("PreFilter :  Method:   -> " + request.getMethod());
-        logger.info("PreFilter :  Headers:  -> " + request.getHeaders());
-        logger.info("PreFilter :  Added X-From-Gateway: true");
+        ServerHttpRequest request = exchange.getRequest();
         String originalPath = request.getPath().pathWithinApplication().value();  // 예: /api/public/contents/latest
         String[] permittedPaths = {"/api/public/", "/api/auth"};
-        logger.info("Original Path for JWT permit check: " + originalPath);
 
+        // public 요청 여부 판단
+        boolean isPublic = Arrays.stream(permittedPaths)
+                .anyMatch(originalPath::startsWith);
 
+        logger.info("======Pre Filter======");
+        logger.info("PreFilter :  URI       -> " + request.getURI());
+        logger.info("PreFilter :  Method    -> " + request.getMethod());
+        logger.info("PreFilter :  Headers   -> " + request.getHeaders());
+        logger.info("PreFilter :  Original Path for JWT check -> " + originalPath);
+
+        // ✅ 헤더를 .headers() 방식으로 추가
         ServerHttpRequest modifiedRequest = request.mutate()
-                .header("X-From-Gateway", "true")
-                // public 요청 여부를 헤더로 전달
-                .header("X-Public-Request",
-                        Arrays.stream(permittedPaths)
-                                .anyMatch(originalPath::startsWith) ? "true" : "false")
-                .header("X-Original-Path", originalPath)
+                .headers(httpHeaders -> {
+                    httpHeaders.set("X-From-Gateway", "true");
+                    httpHeaders.set("X-Public-Request", isPublic ? "true" : "false");
+                    httpHeaders.set("X-Original-Path", originalPath);
+                })
                 .build();
         //요청이 gateway를 지났음을 header에 담음
 
