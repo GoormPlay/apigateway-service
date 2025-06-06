@@ -36,7 +36,6 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
         log.info("X-Public-Request: " + isPublic);
         if ("true".equals(exchange.getRequest().getHeaders().getFirst("X-Public-Request"))) {
             String token = extractToken(exchange);
-            // public 요청이지만 토큰이 있는 경우 검증 시도 (실패해도 진행)
             if (token != null) {
                 try {
                     validateToken(token);
@@ -44,16 +43,16 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
                     log.debug("Token validation failed for public path", e);
                 }
             }
-            return chain.filter(exchange);
-        }
+            return chain.filter(exchange); // ✅ 무조건 통과
+        } else {
+            String token = extractToken(exchange);
+            if (token == null || !validateToken(token)) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete(); // 🔐 인증 실패 시 차단
+            }
 
-        String token = extractToken(exchange);
-        if (token == null || !validateToken(token)) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            return chain.filter(exchange); // ✅ 유효한 토큰
         }
-
-        return chain.filter(exchange);
     }
 
     private boolean isPermittedPath(String currentPath) {
