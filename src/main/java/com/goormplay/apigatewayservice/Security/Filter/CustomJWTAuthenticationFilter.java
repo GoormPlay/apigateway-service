@@ -31,14 +31,17 @@ public class CustomJWTAuthenticationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        // 모든 요청에 X-From-Gateway 헤더 추가
-        exchange = exchange.mutate()
-                .request(builder -> builder.header("X-From-Gateway", "true"))
-                .build();
-
-        String path = exchange.getRequest().getURI().getPath();
-        if (isPermittedPath(path)) {
-            log.info("퍼밋된 경로 통과: " + path);
+        log.info("Filter 시작");
+        if ("true".equals(exchange.getRequest().getHeaders().getFirst("X-Public-Request"))) {
+            String token = extractToken(exchange);
+            // public 요청이지만 토큰이 있는 경우 검증 시도 (실패해도 진행)
+            if (token != null) {
+                try {
+                    validateToken(token);
+                } catch (Exception e) {
+                    log.debug("Token validation failed for public path", e);
+                }
+            }
             return chain.filter(exchange);
         }
 
