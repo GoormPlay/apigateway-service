@@ -1,0 +1,29 @@
+name: Build and Push to DockerHub
+
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Build JAR
+        run: ./gradlew build
+
+      - name: Docker Build & Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: roin09/${{ github.repository }}:latest
+        env:
+          DOCKER_BUILDKIT: 1
