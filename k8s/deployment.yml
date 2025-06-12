@@ -14,12 +14,12 @@ spec:
         app: apigateway-service
     spec:
       containers:
-        - name: apigateway
+        - name: apigateway-service
           image: roin09/apigateway-service:latest
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: apigateway-config
+                name: apigateway-service-config
             - secretRef:
-                name: apigateway-secret
+                name: apigateway-service-secret
