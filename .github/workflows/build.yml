@@ -8,6 +8,7 @@ on:
       - '**/*.java'
       - '**/build.gradle'
       - 'Dockerfile'
+      - '**/build.yml'
 
 jobs:
   build:
@@ -16,6 +17,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+
+      - name: Set service name from directory
+        id: vars
+        run: echo "SERVICE_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV  
         
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew  
@@ -43,8 +48,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg JAR_FILE=${{ steps.find_jar.outputs.jar_path }} -t ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY:latest .
+          docker build --build-arg JAR_FILE=${{ steps.find_jar.outputs.jar_path }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/$SERVICE_NAME:latest .
 
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$SERVICE_NAME:latest
