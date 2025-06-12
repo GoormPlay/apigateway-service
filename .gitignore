@@ -38,3 +38,6 @@ out/
 ### VS Code ###
 .vscode/
 .DS_Store
+
+### k8s Secret ###
+k8s/secret.yml
