@@ -40,7 +40,6 @@ public class CustomPreFilter implements GlobalFilter, Ordered {
                 .header("X-Original-Path", originalPath)
                 .build();
         //요청이 gateway를 지났음을 header에 담음
-
        return chain.filter(exchange.mutate().request(modifiedRequest).build());
     }
 
