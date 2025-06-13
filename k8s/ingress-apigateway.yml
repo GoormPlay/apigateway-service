@@ -6,6 +6,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+  ingressClassName: nginx
   rules:
     - host: goormplay.local
       http:
@@ -14,6 +15,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: apigateway
+                name: apigateway-service
                 port:
                   number: 80
