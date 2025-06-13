@@ -5,3 +5,4 @@ resources:
   - service.yml
   - configmap.yml
   - sealed-apigateway-service-secret.yml
+  - ingress-apigateway.yml
