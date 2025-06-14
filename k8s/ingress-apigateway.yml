@@ -3,16 +3,14 @@ kind: Ingress
 metadata:
   name: apigateway-ingress
   namespace: apigateway
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
     - host: goormplay.local
       http:
         paths:
-          - path: /api(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /api
+            pathType: Prefix
             backend:
               service:
                 name: apigateway-service
