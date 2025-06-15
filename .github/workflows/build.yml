@@ -3,12 +3,11 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - develop
+      - deploy
     paths:
       - '**/*.java'
       - '**/build.gradle'
       - 'Dockerfile'
-      - '**/build.yml'
 
 jobs:
   build:
