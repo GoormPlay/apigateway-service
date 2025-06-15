@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  SPRING_PROFILES_ACTIVE: {{ .Values.config.SPRING_PROFILES_ACTIVE | quote }}
+  SPRING_SERVER_PORT: {{ .Values.config.SPRING_SERVER_PORT | quote }}
+  EUREKA_URL: {{ .Values.config.EUREKA_URL | quote }}
+  S3_FRONTEND_ORIGIN: {{ .Values.config.S3_FRONTEND_ORIGIN | quote }}

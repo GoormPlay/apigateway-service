@@ -1,0 +1,45 @@
+replicaCount: 1
+
+image:
+  repository: roin09/apigateway-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  SPRING_PROFILES_ACTIVE: prod
+  SPRING_SERVER_PORT: "8080"
+  EUREKA_URL: http://eureka-service.eureka.svc.cluster.local:8761/eureka
+  S3_FRONTEND_ORIGIN: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+topologySpreadConstraints:
+  enabled: true
+  maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+
+useSecret: false
+
+ingress:
+  enabled: true
+  className: nginx
+  host: goormplay.local
+  path: /api
+  pathType: Prefix
