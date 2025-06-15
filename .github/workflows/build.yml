@@ -8,6 +8,7 @@ on:
       - '**/*.java'
       - '**/build.gradle'
       - 'Dockerfile'
+      - 'helm-charts/**'
 
 jobs:
   build:
