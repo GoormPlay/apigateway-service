@@ -38,7 +38,7 @@ service:
 config:
   SPRING_PROFILES_ACTIVE: prod
   SPRING_SERVER_PORT: "$SERVICE_PORT"
-  EUREKA_URL: http://eureka-service.default.svc.cluster.local:8761/eureka
+  EUREKA_URL: http://eureka-service.eureka.svc.cluster.local:8761/eureka
   S3_FRONTEND_ORIGIN: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
 
 resources:
