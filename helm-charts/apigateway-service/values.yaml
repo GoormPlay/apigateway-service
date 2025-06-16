@@ -35,7 +35,7 @@ resources:
 hpa:
   enabled: true
   minReplicas: 1
-  maxReplicas: 4
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 75
 
 topologySpreadConstraints:
