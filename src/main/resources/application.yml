@@ -10,62 +10,62 @@ spring:
           enabled: true
       routes:
         - id: auth-service
-          uri: http://auth-service.default.svc.cluster.local:8081
+          uri: http://auth-service.auth.svc.cluster.local:8081
           predicates:
             - Path=/api/auth/**
           filters:
             - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
 
         - id: member-service
-          uri: http://member-service.default.svc.cluster.local:8082
+          uri: http://member-service.member.svc.cluster.local:8082
           predicates:
             - Path=/api/member/**
           filters:
             - RewritePath=/api/member/(?<segment>.*), /member/${segment}
         - id: ui-service
-          uri: http://ui-service.default.svc.cluster.local:8086
+          uri: http://ui-service.ui.svc.cluster.local:8086
           predicates:
             - Path=/api/public/ui/**, /api/ui/**
           filters:
             - RewritePath=/api(?:/public)?/ui/(?<segment>.*), /ui/${segment}
 
         - id: ad-service
-          uri: http://ad-service.default.svc.cluster.local:8088
+          uri: http://ad-service.ad.svc.cluster.local:8088
           predicates:
             - Path=/api/public/ad/**, /api/ad/**
           filters:
             - RewritePath=/api(?:/public)?/ad/(?<segment>.*), /ad/${segment}
 
         - id: ad-admin-service
-          uri: http://ad-admin-service.default.svc.cluster.local:8089
+          uri: http://ad-admin-service.ad-admin.svc.cluster.local:8089
           predicates:
             - Path=/api/public/ads/**, /api/ads/**
           filters:
             - RewritePath=/api(?:/public)?/ads/(?<segment>.*), /ads/${segment}
 
         - id: content-service
-          uri: http://content-service.default.svc.cluster.local:8083
+          uri: http://content-service.content.svc.cluster.local:8083
           predicates:
             - Path=/api/public/contents/**, /api/contents/**
           filters:
             - RewritePath=/api(?:/public)?/contents/(?<segment>.*), /contents/${segment}
 
         - id: indexing-service
-          uri: http:/indexing-service.default.svc.cluster.local:8084
+          uri: http:/indexing-service.indexing.svc.cluster.local:8084
           predicates:
             - Path=/index/**
           filters:
             - RewritePath=/index/(?<segment>.*), /index/${segment}
 
         - id: review-service
-          uri: http://review-service.default.svc.cluster.local:8087
+          uri: http://review-service.review.svc.cluster.local:8087
           predicates:
             - Path=/api/public/review/**, /api/review/**
           filters:
             - RewritePath=/api(?:/public)?/review/(?<segment>.*), /review/${segment}
 
         - id: subscribe-service
-          uri: http://subscribe-service.default.svc.cluster.local:8085
+          uri: http://subscribe-service.subscribe.svc.cluster.local:8085
           predicates:
             - Path=/api/public/subscribe/**, /api/subscribe/**
           filters:

@@ -17,6 +17,13 @@ config:
   KAFKA_BOOTSTRAP_SERVERS: 43.201.43.88:9092, 15.165.234.219:9092, 15.165.234.219:9092
   KAFKA_SCHEMA_REGISTRY_SERVER: 3.38.204.173:8081
 
+ingress:
+  enabled: true
+  host: api.aws-test-site.shop
+  path: /
+  pathType: Prefix
+  className: alb
+
 resources:
   requests:
     cpu: 100m
