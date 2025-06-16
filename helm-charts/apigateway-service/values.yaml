@@ -15,14 +15,16 @@ config:
   SPRING_SERVER_PORT: "8080"
   EUREKA_URL: http://eureka-service.eureka.svc.cluster.local:8761/eureka
   S3_FRONTEND_ORIGIN: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
+  KAFKA_BOOTSTRAP_SERVERS: 43.201.43.88:9092, 15.165.234.219:9092, 15.165.234.219:9092
+  KAFKA_SCHEMA_REGISTRY_SERVER: 3.38.204.173:8081
 
 resources:
   requests:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 100m
+    memory: 256Mi
   limits:
-    cpu: 500m
-    memory: 1Gi
+    cpu: 300m
+    memory: 512Mi
 
 hpa:
   enabled: true
@@ -35,11 +37,7 @@ topologySpreadConstraints:
   maxSkew: 1
   topologyKey: topology.kubernetes.io/zone
 
-useSecret: false
-
-ingress:
+podAntiAffinity:
   enabled: true
-  className: nginx
-  host: goormplay.local
-  path: /api
-  pathType: Prefix
+
+useSecret: false

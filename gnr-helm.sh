@@ -40,14 +40,16 @@ config:
   SPRING_SERVER_PORT: "$SERVICE_PORT"
   EUREKA_URL: http://eureka-service.eureka.svc.cluster.local:8761/eureka
   S3_FRONTEND_ORIGIN: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
+  KAFKA_BOOTSTRAP_SERVERS: 43.201.43.88:9092, 15.165.234.219:9092, 15.165.234.219:9092
+  KAFKA_SCHEMA_REGISTRY_SERVER: 3.38.204.173:8081
 
 resources:
   requests:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 100m
+    memory: 256Mi
   limits:
-    cpu: 500m
-    memory: 1Gi
+    cpu: 300m
+    memory: 512Mi
 
 hpa:
   enabled: true
@@ -59,6 +61,9 @@ topologySpreadConstraints:
   enabled: true
   maxSkew: 1
   topologyKey: topology.kubernetes.io/zone
+
+podAntiAffinity:
+  enabled: true
 
 useSecret: false
 EOF
@@ -109,6 +114,20 @@ spec:
             matchLabels:
               app: {{ .Chart.Name }}
       {{- end }}
+      {{- if .Values.podAntiAffinity.enabled }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ .Chart.Name }}
+      {{- end }}
 EOF
 
 # service.yaml
@@ -140,6 +159,8 @@ data:
   SPRING_SERVER_PORT: {{ .Values.config.SPRING_SERVER_PORT | quote }}
   EUREKA_URL: {{ .Values.config.EUREKA_URL | quote }}
   S3_FRONTEND_ORIGIN: {{ .Values.config.S3_FRONTEND_ORIGIN | quote }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.config.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  KAFKA_SCHEMA_REGISTRY_SERVER: {{ .Values.config.KAFKA_SCHEMA_REGISTRY_SERVER | quote }}
 EOF
 
 # hpa.yaml

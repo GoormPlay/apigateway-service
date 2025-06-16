@@ -8,3 +8,5 @@ data:
   SPRING_SERVER_PORT: {{ .Values.config.SPRING_SERVER_PORT | quote }}
   EUREKA_URL: {{ .Values.config.EUREKA_URL | quote }}
   S3_FRONTEND_ORIGIN: {{ .Values.config.S3_FRONTEND_ORIGIN | quote }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.config.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  KAFKA_SCHEMA_REGISTRY_SERVER: {{ .Values.config.KAFKA_SCHEMA_REGISTRY_SERVER | quote }}
