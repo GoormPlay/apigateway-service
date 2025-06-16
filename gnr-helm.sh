@@ -38,7 +38,6 @@ service:
 config:
   SPRING_PROFILES_ACTIVE: prod
   SPRING_SERVER_PORT: "$SERVICE_PORT"
-  EUREKA_URL: http://eureka-service.eureka.svc.cluster.local:8761/eureka
   S3_FRONTEND_ORIGIN: http://goorm-front.s3-website.ap-northeast-2.amazonaws.com
   KAFKA_BOOTSTRAP_SERVERS: 43.201.43.88:9092, 15.165.234.219:9092, 15.165.234.219:9092
   KAFKA_SCHEMA_REGISTRY_SERVER: 3.38.204.173:8081
@@ -157,7 +156,6 @@ metadata:
 data:
   SPRING_PROFILES_ACTIVE: {{ .Values.config.SPRING_PROFILES_ACTIVE | quote }}
   SPRING_SERVER_PORT: {{ .Values.config.SPRING_SERVER_PORT | quote }}
-  EUREKA_URL: {{ .Values.config.EUREKA_URL | quote }}
   S3_FRONTEND_ORIGIN: {{ .Values.config.S3_FRONTEND_ORIGIN | quote }}
   KAFKA_BOOTSTRAP_SERVERS: {{ .Values.config.KAFKA_BOOTSTRAP_SERVERS | quote }}
   KAFKA_SCHEMA_REGISTRY_SERVER: {{ .Values.config.KAFKA_SCHEMA_REGISTRY_SERVER | quote }}
