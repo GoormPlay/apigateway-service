@@ -10,79 +10,67 @@ spring:
           enabled: true
       routes:
         - id: auth-service
-          uri: lb://auth-service
+          uri: http://auth-service.default.svc.cluster.local:8081
           predicates:
             - Path=/api/auth/**
           filters:
             - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
 
         - id: member-service
-          uri: lb://member-service
+          uri: http://member-service.default.svc.cluster.local:8082
           predicates:
             - Path=/api/member/**
           filters:
             - RewritePath=/api/member/(?<segment>.*), /member/${segment}
         - id: ui-service
-          uri: lb://ui-service
+          uri: http://ui-service.default.svc.cluster.local:8086
           predicates:
             - Path=/api/public/ui/**, /api/ui/**
           filters:
             - RewritePath=/api(?:/public)?/ui/(?<segment>.*), /ui/${segment}
 
         - id: ad-service
-          uri: lb://ad-service
+          uri: http://ad-service.default.svc.cluster.local:8088
           predicates:
             - Path=/api/public/ad/**, /api/ad/**
           filters:
             - RewritePath=/api(?:/public)?/ad/(?<segment>.*), /ad/${segment}
 
         - id: ad-admin-service
-          uri: lb://ad-admin-service
+          uri: http://ad-admin-service.default.svc.cluster.local:8089
           predicates:
             - Path=/api/public/ads/**, /api/ads/**
           filters:
             - RewritePath=/api(?:/public)?/ads/(?<segment>.*), /ads/${segment}
 
         - id: content-service
-          uri: lb://content-service
+          uri: http://content-service.default.svc.cluster.local:8083
           predicates:
             - Path=/api/public/contents/**, /api/contents/**
           filters:
             - RewritePath=/api(?:/public)?/contents/(?<segment>.*), /contents/${segment}
-        - id: common
-          uri: lb://common
-          predicates:
-            - Path=/common/logs/**
-          filters:
-            - RewritePath=/common/logs/(?<segment>.*), /common/logs/${segment}
 
         - id: indexing-service
-          uri: lb://indexing-service
+          uri: http:/indexing-service.default.svc.cluster.local:8084
           predicates:
             - Path=/index/**
           filters:
             - RewritePath=/index/(?<segment>.*), /index/${segment}
 
         - id: review-service
-          uri: lb://review-service
+          uri: http://review-service.default.svc.cluster.local:8087
           predicates:
             - Path=/api/public/review/**, /api/review/**
           filters:
             - RewritePath=/api(?:/public)?/review/(?<segment>.*), /review/${segment}
 
         - id: subscribe-service
-          uri: lb://subscribe-service
+          uri: http://subscribe-service.default.svc.cluster.local:8085
           predicates:
             - Path=/api/public/subscribe/**, /api/subscribe/**
           filters:
             - RewritePath=/api(?:/public)?/subscribe/(?<segment>.*), /subscribe/${segment}
 
-        - id: userAction-test-service
-          uri: lb://userAction-test-service
-          predicates:
-            - Path=/api/public/events/**, /api/events/**
-          filters:
-            - RewritePath=/api(?:/public)?/events/(?<segment>.*), /events/${segment}
       default-filters:
         PreserveHostHeader
 server:
@@ -92,11 +80,5 @@ service:
     secret-key: "pA1Qb6q8vXqWn4FQ8zQ2h6V7Q6k3y8fB3wZ2s9T1n4m5c6p7v8w9x0y1z2A3B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8"
 cors:
   allowed-origin: ${S3_FRONTEND_ORIGIN:http://localhost:3000}
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${EUREKA_URL:http://gpadmin:1234@localhost:8761/eureka}
 security:
   permit-paths: /api/public/**,/api/auth/**,/static/**
