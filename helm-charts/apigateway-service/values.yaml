@@ -40,7 +40,8 @@ hpa:
 
 topologySpreadConstraints:
   enabled: true
-  maxSkew: 1
+  maxSkew: 2
+  whenUnsatisfiable: ScheduleAnyway
   topologyKey: topology.kubernetes.io/zone
 
 podAntiAffinity:
