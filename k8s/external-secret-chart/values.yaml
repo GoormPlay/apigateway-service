@@ -1,0 +1,22 @@
+serviceName: apigateway-service
+namespace: apigateway
+
+secrets:
+  - SPRING_PROFILES_ACTIVE
+  - SPRING_SERVER_PORT
+  - S3_FRONTEND_ORIGIN
+  - KAFKA_BOOTSTRAP_SERVERS
+  - KAFKA_SCHEMA_REGISTRY_SERVER
+
+secureSecrets:
+  - MONGODB_URI
+  - MYSQL_HOST
+  - MYSQL_PORT
+  - MYSQL_DB_NAME
+  - MONGO_DB_NAME
+  - MYSQL_USER
+  - MYSQL_PASSWORD
+  - IMGBB_API_KEY
+ingress:
+  enabled: true
+  host: api.aws-test-site.shop

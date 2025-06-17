@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apigateway-service
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/GoormPlay/apigateway-service.git
+    targetRevision: deploy
+    path: helm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: apigateway
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

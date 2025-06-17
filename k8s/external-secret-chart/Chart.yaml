@@ -1,0 +1,5 @@
+apiVersion: v2
+name: external-secret-chart
+description: Helm Chart for ExternalSecret-based config/secret injection
+version: 0.1.0
+appVersion: "1.0"

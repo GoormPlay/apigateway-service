@@ -1,0 +1,7 @@
+apiVersion: v2
+name: apigateway-service
+version: 0.1.0
+dependencies:
+  - name: base-template
+    version: 0.1.0
+    repository: "file://./base"
