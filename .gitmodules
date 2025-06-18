@@ -1,0 +1,3 @@
+[submodule "k8s/helm/base"]
+	path = k8s/helm/base
+	url = https://github.com/GoormPlay/helm-chart.git

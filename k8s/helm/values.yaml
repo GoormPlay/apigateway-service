@@ -9,3 +9,6 @@ service:
 env:
   useConfigMap: true
   useSecret: true
+ingress:
+  enabled: true
+  host: api.aws-test-site.shop
