@@ -18,7 +18,7 @@ base-template:
 
   ingress:
     enabled: true
-    host: api.aws-test-site.shop
+    host: ""
 
   externalSecret:
     enabled: true
