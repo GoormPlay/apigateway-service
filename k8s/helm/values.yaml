@@ -1,43 +1,47 @@
-image:
-  repository: roin09/apigateway-service
-  tag: latest
+base-template:
+  nameOverride: apigateway-service
+  fullnameOverride: apigateway-service
 
-service:
-  port: 80
-  targetPort: 8080
+  image:
+    repository: roin09/apigateway-service
+    tag: latest
 
-env:
-  useConfigMap: true
-  useSecret: true
+  service:
+    port: 80
+    targetPort: 8080
 
-replicaCount: 1
+  env:
+    useConfigMap: true
+    useSecret: true
 
-ingress:
-  enabled: true
-  host: api.aws-test-site.shop
+  replicaCount: 1
 
-externalSecret:
-  enabled: true
-  refreshInterval: 1h
-  secretStore:
-    name: aws-secrets
-    kind: ClusterSecretStore
-  dataFromKey: apigateway-service-secret
+  ingress:
+    enabled: true
+    host: api.aws-test-site.shop
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: node-type
-              operator: In
-              values:
-                - large
+  externalSecret:
+    enabled: true
+    refreshInterval: 1h
+    secretStore:
+      name: aws-secrets
+      kind: ClusterSecretStore
+    dataFromKey: apigateway-service-secret
 
-resources:
-  requests:
-    cpu: 500m
-    memory: 512Mi
-  limits:
-    cpu: 1000m
-    memory: 1024Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                  - large
+
+  resources:
+    requests:
+      cpu: 300m
+      memory: 384Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
