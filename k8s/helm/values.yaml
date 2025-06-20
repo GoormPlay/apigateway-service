@@ -34,16 +34,7 @@ externalSecret:
     kind: ClusterSecretStore
   dataFromKey: apigateway-service-secret
 
-affinity:
-  nodeAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 1
-        preference:
-          matchExpressions:
-            - key: node-type
-              operator: In
-              values:
-                - high
+affinity: {}
 
 resources:
   requests:
