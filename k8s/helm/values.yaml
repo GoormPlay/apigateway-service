@@ -24,7 +24,7 @@ hpa:
 
 ingress:
   enabled: true
-  host: api.aws-test-site.shop
+  host: "api.aws-test-site.shop"
 
 externalSecret:
   enabled: true
