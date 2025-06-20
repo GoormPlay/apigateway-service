@@ -3,4 +3,4 @@ dependencies:
   repository: file://base-template
   version: 0.1.0
 digest: sha256:d0b507561fa72fd5d8705093e51043fe61375f2e43e5a99aa02707d40d59a580
-generated: "2025-06-19T15:19:07.713018+09:00"
+generated: "2025-06-19T17:48:12.061049+09:00"
