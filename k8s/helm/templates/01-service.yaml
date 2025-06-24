@@ -1,4 +1,8 @@
 # templates/service.yaml
-# 이 파일이 반드시 있어야 하며, 두 서비스를 모두 정의
+# Main Service
 {{- include "base-template.service" . }}
+
+# Preview Service for Blue/Green deployment
+{{- if .Values.rollouts.enabled }}
 {{- include "base-template.preview-service" . }}
+{{- end }}
