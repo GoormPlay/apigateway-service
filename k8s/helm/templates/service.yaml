@@ -1,2 +1,4 @@
-{{ include "base-template.service" . }}
+# templates/service.yaml
+# 이 파일이 반드시 있어야 하며, 두 서비스를 모두 정의
+{{- include "base-template.service" . }}
 {{- include "base-template.preview-service" . }}
