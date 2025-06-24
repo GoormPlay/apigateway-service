@@ -1,0 +1,4 @@
+# Preview Service for Blue/Green deployment
+{{- if .Values.rollouts.enabled }}
+{{- include "base-template.preview-service" . }}
+{{- end }}
