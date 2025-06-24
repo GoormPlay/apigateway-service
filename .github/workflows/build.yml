@@ -48,7 +48,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg JAR_FILE=${{ steps.find_jar.outputs.jar_path }} \
+          docker build --no-cache \
+            --build-arg JAR_FILE=${{ steps.find_jar.outputs.jar_path }} \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/$SERVICE_NAME:latest .
 
       - name: Push Docker image
