@@ -43,3 +43,13 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
+
+rollouts:
+  enabled: true
+  strategy: blueGreen
+  blueGreen:
+    scaleDownDelaySeconds: 300
+  autoPromotionEnabled: false
+  analysis:
+    templates:
+      - templateName: success-rate
