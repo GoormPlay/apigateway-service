@@ -1,8 +1,3 @@
 # templates/service.yaml
 # Main Service
 {{- include "base-template.service" . }}
-
-# Preview Service for Blue/Green deployment
-{{- if .Values.rollouts.enabled }}
-{{- include "base-template.preview-service" . }}
-{{- end }}
