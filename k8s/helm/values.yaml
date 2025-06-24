@@ -3,7 +3,7 @@ fullnameOverride: apigateway-service
 image:
   repository: roin09/apigateway-service
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
@@ -50,17 +50,3 @@ rollouts:
   autoPromotionEnabled: false
   blueGreen:
     scaleDownDelaySeconds: 300
-
-probes:
-  readiness:
-    path: /health
-    port: 8080
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-  liveness:
-    path: /health
-    port: 8080
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
