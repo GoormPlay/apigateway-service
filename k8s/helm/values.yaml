@@ -45,7 +45,7 @@ resources:
     memory: 512Mi
 
 rollouts:
-  enabled: false
+  enabled: true
   strategy: blueGreen
   autoPromotionEnabled: false
   blueGreen:
