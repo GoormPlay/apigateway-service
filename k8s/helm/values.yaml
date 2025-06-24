@@ -38,10 +38,10 @@ affinity: {}
 
 resources:
   requests:
-    cpu: 300m
-    memory: 384Mi
+    cpu: 200m     # 기존값보다 낮춤
+    memory: 256Mi # 기존값보다 낮춤
   limits:
-    cpu: 500m
+    cpu: 400m
     memory: 512Mi
 
 rollouts:
