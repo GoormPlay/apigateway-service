@@ -1,1 +1,4 @@
-{{ include "base-template.deployment" . }}
+# templates/deployment.yaml
+{{- if not .Values.rollouts.enabled }}
+{{- include "base-template.deployment" . }}
+{{- end }}
