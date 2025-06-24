@@ -51,5 +51,8 @@ rollouts:
     scaleDownDelaySeconds: 300
   autoPromotionEnabled: false
   analysis:
+    interval: "30s"
+    count: 1
+    successCondition: "true"
     templates:
       - templateName: success-rate

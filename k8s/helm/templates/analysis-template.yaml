@@ -1,0 +1,2 @@
+# templates/analysis-template.yaml
+{{- include "base-template.analysis-template" . }}
